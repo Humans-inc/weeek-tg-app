@@ -1,0 +1,49 @@
+.noAccess {
+  min-height: 100svh;
+  background: #F8F8F8 url('/images/error-1.png') no-repeat center top 104px;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 40px;
+  min-height: 100svh;
+  padding: 30px 28px;
+}
+.bottom {
+  margin-top: auto;
+  width: 100%;
+}
+.bottomTitle {
+  margin-bottom: 8px;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-align: center;
+  color: #2a2a2a;
+}
+.bottomDescr {
+  margin-bottom: 24px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-align: center;
+  color: #131313;
+}
+.bottomButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 18px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  color: #fff;
+  background: #7784ee;
+}
