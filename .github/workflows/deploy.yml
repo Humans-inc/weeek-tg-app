@@ -30,6 +30,8 @@ jobs:
 
     - name: Deploy to Server
       run: |
-        scp -r ./build/* levpavloff@185.185.70.149:/var/www/projects/webapp # Копировать сборку на сервер
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        eval "$(ssh-agent -s)"
+        ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+        scp -rv ./build/* levpavloff@185.185.70.149:/var/www/projects/webapp
+
+
