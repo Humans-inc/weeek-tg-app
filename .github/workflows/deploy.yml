@@ -32,6 +32,6 @@ jobs:
       run: |
         eval "$(ssh-agent -s)"
         ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
-        scp -rv ./build/* levpavloff@185.185.70.149:/var/www/projects/webapp
+        scp -rv ./dist/* levpavloff@185.185.70.149:/var/www/projects/webapp
 
 
