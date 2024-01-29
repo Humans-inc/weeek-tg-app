@@ -1,0 +1,28 @@
+name: Deploy Weeek Tg App
+
+on:
+  push:
+    branches: [ dev ]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2 # Проверить код из репозитория
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '21.6.1' # Указать версию Node.js
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build
+
+    - name: Deploy to Server
+      run: |
+        scp -r ./build/* root@185.185.70.149:/var/www/projects/webapp # Копировать сборку на сервер
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
