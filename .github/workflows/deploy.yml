@@ -23,6 +23,6 @@ jobs:
 
     - name: Deploy to Server
       run: |
-        scp -r ./build/* root@185.185.70.149:/var/www/projects/webapp # Копировать сборку на сервер
+        scp -r ./build/* levpavloff@185.185.70.149:/var/www/projects/webapp # Копировать сборку на сервер
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
