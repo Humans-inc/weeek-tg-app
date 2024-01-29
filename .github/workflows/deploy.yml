@@ -27,8 +27,6 @@ jobs:
         echo "185.185.70.149 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHLTK5m505P8D19JOUQIJKFFDPhzuzf4k0wPgwUOwXtbKCv2l0l7uLJ90SuRorRmrq3w1CMKTUox9PkzU7fis0A=" >> ~/.ssh/known_hosts
 
       
-   
-
 
     - name: Deploy to Server
       run: |
