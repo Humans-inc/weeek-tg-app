@@ -22,7 +22,7 @@ const NoAccess: FC = () => {
           <p className={styles.bottomDescr}>
             Попросите администратора бота<br/>выдать вам доступ к приложению
           </p>
-          <button onClick={tg.close()} className={styles.bottomButton}>
+          <button className={styles.bottomButton}>
             Вернуться назад
           </button>
         </div>
