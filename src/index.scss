@@ -14,3 +14,23 @@ button {
   padding: 30px 28px;
   margin: 0 auto;
 }
+.error {
+  color: #333;
+  background: #7E7E7E;
+}
+.success {
+  background: #34A770;
+}
+.inProgress {
+  color: #5F6DDD;
+  background: #D2D7FF;
+  gap: 10px;
+  &::before {
+    content: '';
+    display: block;
+    width: 23px;
+    height: 8px;
+    flex-shrink: 0;
+    background: url('/public/images/dots.svg') no-repeat center / contain;
+  }
+}

@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import styles from './NoAccess.module.scss';
+import {Button} from '../UI/Button/Button';
 
 const NoAccess: FC = () => {
   const tg = window.Telegram.WebApp;
@@ -17,7 +18,7 @@ const NoAccess: FC = () => {
             <br />
             выдать вам доступ к приложению
           </p>
-          <button className={styles.bottomButton} onClick={() => tg.close()}>Вернуться назад</button>
+          <Button clickHandler={() => tg.close()}>Вернуться назад</Button>
         </div>
       </div>
     </div>
