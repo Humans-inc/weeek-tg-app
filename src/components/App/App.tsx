@@ -14,10 +14,12 @@ const App = () => {
   //     .then((data) => console.log(data));
   // }, []);
 
-  const haveAccess = false;
+  const haveAccess = true;
 
   return (
-    <div className={styles.app}>{haveAccess ? <AddTask /> : <NoAccess />}</div>
+    <div className={styles.app}>
+      {haveAccess ? <AddTask projectName="TEST API" /> : <NoAccess />}
+    </div>
   );
 };
 

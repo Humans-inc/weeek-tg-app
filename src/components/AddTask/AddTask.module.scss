@@ -1,0 +1,99 @@
+.addTask {
+  min-height: 100svh;
+  background: #eee;
+}
+.addTaskTop {
+  padding: 24px;
+  border-radius: 0px 0px 24px 24px;
+  background: #7784ee;
+}
+.title {
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-align: left;
+  color: #fff;
+}
+.projectName {
+  margin-bottom: 28px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-align: left;
+  color: #eaeaea;
+}
+.textInput {
+  display: block;
+  width: 100%;
+  margin-bottom: 24px;
+  padding: 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 22px;
+  color: #292a2d;
+  background: #fefefe;
+  &::placeholder {
+    color: #8a8f9b;
+  }
+}
+.subtitle {
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 22px;
+  letter-spacing: -0.32px;
+  text-align: left;
+  color: #fcfcfc;
+}
+.depWrapper {
+  width: 100%;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+  }
+}
+.deps {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+
+  input {
+    display: none;
+    &:checked + label {
+      color: #7784ee;
+      background: #fff;
+    }
+  }
+
+  label {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    color: #b7bfff;
+  }
+}
+.deadline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  input {
+    display: none;
+  }
+}

@@ -2,7 +2,7 @@ import { FC, ReactNode } from 'react';
 import styles from './Button.module.scss';
 
 interface ButtonProps {
-  clickHandler: () => void;
+  clickHandler?: () => void;
   children: ReactNode;
   classList?: string;
 }
