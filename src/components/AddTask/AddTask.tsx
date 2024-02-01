@@ -174,18 +174,56 @@ const TinyMCE = ({ handleChange }: any) => {
 };
 
 const Basic = () => {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const [files, setFiles] = useState([]);
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    accept: {
+      'image/jpeg': [],
+      'image/png': [],
+    },
+    maxFiles: 4,
+  });
 
   useEffect(() => {
-    console.log(acceptedFiles);
+    if (acceptedFiles.length) {
+      const formData = new FormData();
+      acceptedFiles.forEach((image) => formData.append('images', image));
+      fetch('https://s1.hmns.in/upload', { method: 'POST', body: formData })
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          } else {
+            console.log({ bad: res.status });
+          }
+        })
+        .then((data) => setFiles(data))
+        .catch((e) => console.error(e));
+    }
   }, [acceptedFiles]);
 
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
+
+  /*
+  {
+    "id": "936e3ebc219a20c",
+    "name": "936e3ebc219a20c.png",
+    "size": 250,
+    "uploadDate": "2024-02-01T17:05:33.348Z",
+    "url": "https://s1.hmns.in/files/936e3ebc219a20c.png"
+  }
+  */
   return (
-    <section className={styles.uploadFiles}>
-      <div {...getRootProps({ className: 'dropzone' })}>
+    <section>
+      <div
+        {...getRootProps({ className: 'dropzone' })}
+        className={styles.uploadFiles}>
         <input {...getInputProps()} />
         <img src={upload} alt="" />
         <p>Выбрать файлы</p>
+      </div>
+      <div>
+        {files.length > 0 && files.map((file, index) => <p>{index}</p>)}
       </div>
     </section>
   );
