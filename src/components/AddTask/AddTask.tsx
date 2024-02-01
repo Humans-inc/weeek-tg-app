@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FC, useState, ChangeEvent } from 'react';
+import { FC, useState, ChangeEvent, forwardRef, Ref } from 'react';
 import styles from './AddTask.module.scss';
 import { Button } from '../UI/Button/Button';
 import Select from 'react-select';
+import DatePicker from 'react-datepicker';
+import ru from 'date-fns/locale/ru';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 const options = [
   { value: 'none', label: 'Без приоритета' },
@@ -119,11 +123,50 @@ interface AddTaskProps {
   projectName: string;
 }
 
+interface CustomInputProps {
+  value?: string | null;
+  onClick?: () => void;
+}
+const CustomDatePicker = ({ userDate, onChange }: any) => {
+  const CustomInput = forwardRef(
+    ({ value, onClick }: CustomInputProps, ref: Ref<HTMLButtonElement>) => (
+      <button
+        className={`${styles.deadline} ${value ? styles.full : null}`}
+        onClick={onClick}
+        ref={ref}>
+        Дедлайн
+        <span>
+          {value
+            ? new Date(value!.toString()).toLocaleDateString()
+            : 'Выбрать дату'}
+        </span>
+      </button>
+    )
+  );
+  return (
+    <DatePicker
+      selected={userDate}
+      onChange={onChange}
+      customInput={<CustomInput />}
+      locale={ru}
+    />
+  );
+};
+
+interface Data {
+  dep: string;
+  title: string;
+  priority: string | null;
+  day: null | Date;
+}
+
 const AddTask: FC<AddTaskProps> = ({ projectName }) => {
-  const [data, setData] = useState({
+
+  const [data, setData] = useState<Data>({
     dep: 'other',
     title: '',
-    priority: 'none'
+    priority: null,
+    day: null,
   });
 
   const changeDep = (e: ChangeEvent<HTMLInputElement>) => {
@@ -180,12 +223,17 @@ const AddTask: FC<AddTaskProps> = ({ projectName }) => {
             setData({ ...data, priority: selectedOption!.value })
           }
           styles={customStyles}
+          isSearchable={false}
         />
-        <label htmlFor="deadline" className={styles.deadline}>
+        <CustomDatePicker
+          userDate={data.day}
+          onChange={(date: any) => setData({...data, day: date})}
+        />
+        {/* <label htmlFor="deadline" className={styles.deadline}>
           Дедлайн
           <span>выбрать дату</span>
           <input type="date" name="date" id="deadline" />
-        </label>
+        </label> */}
       </div>
       <div className={styles.addTskBottom}>
         <p>Загрузите скриншоты</p>
@@ -194,13 +242,20 @@ const AddTask: FC<AddTaskProps> = ({ projectName }) => {
         <textarea name="task_description" id="task_description"></textarea>
       </div>
       <div className="container">
-        <Button clickHandler={() => {
-          if (data.priority === 'none') {
-            const {priority, ...rest} = data;
-            console.log(rest);
-          } else {
-            console.log(data);
-          }}}>Отправить задачу</Button>
+        <Button
+          clickHandler={() => {
+            const realData = Object.fromEntries(
+              Object.entries(data).filter(
+                ([key, value]) => value !== null
+              )
+            );
+            if (Object.keys(realData).includes('day')) {
+              realData.day = new Date(realData.day).toLocaleDateString()
+            }
+            console.log(realData);
+          }}>
+          Отправить задачу
+        </Button>
       </div>
     </div>
   );

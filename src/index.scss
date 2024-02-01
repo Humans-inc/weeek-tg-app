@@ -16,14 +16,14 @@ button {
 }
 .error {
   color: #333;
-  background: #7E7E7E;
+  background: #7e7e7e;
 }
 .success {
-  background: #34A770;
+  background: #34a770;
 }
 .inProgress {
-  color: #5F6DDD;
-  background: #D2D7FF;
+  color: #5f6ddd;
+  background: #d2d7ff;
   gap: 10px;
   &::before {
     content: '';
@@ -33,4 +33,33 @@ button {
     flex-shrink: 0;
     background: url('/public/images/dots.svg') no-repeat center / contain;
   }
+}
+.react-datepicker-wrapper {
+  width: 100%;
+}
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--in-selecting-range,
+.react-datepicker__month-text--in-range,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__quarter-text--in-selecting-range,
+.react-datepicker__quarter-text--in-range,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--in-selecting-range,
+.react-datepicker__year-text--in-range {
+  background-color: #7784ee;
+  color: #fff;
+}
+.react-datepicker__current-month,
+.react-datepicker-time__header,
+.react-datepicker-year-header {
+  margin-top: 0;
+  color: #000;
+  font-weight: 500;
+  font-size: 0.944rem;
+}
+.react-datepicker__current-month::first-letter {
+  text-transform: uppercase;
 }
