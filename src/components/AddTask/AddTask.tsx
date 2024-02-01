@@ -165,6 +165,7 @@ const TinyMCE = ({ handleChange }: any) => {
         height: 260,
         plugins: ['lists'],
         toolbar: 'blocks | bullist numlist',
+        menubar: false,
         placeholder:
           'Приложите ссылку на страницу. Расскажите, каким должен быть результат',
       }}
