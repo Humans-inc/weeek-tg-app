@@ -159,7 +159,7 @@ const CustomDatePicker = ({ userDate, onChange }: any) => {
 const TinyMCE = ({ handleChange }: any) => {
   return (
     <Editor
-      apiKey="5b8nq1ms6dc9aeen0bebkynexr915449nw66x9yx9ihp0y2x"
+      apiKey="v6gobd9x6i3c23v657raceriks3k7hul4wz2dybpu8pp03ni"
       init={{
         language: 'ru',
         height: 260,
