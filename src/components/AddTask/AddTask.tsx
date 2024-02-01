@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FC, useState, ChangeEvent, forwardRef, Ref } from 'react';
+import { FC, useState, ChangeEvent, forwardRef, Ref, useEffect } from 'react';
 import styles from './AddTask.module.scss';
 import { Button } from '../UI/Button/Button';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import ru from 'date-fns/locale/ru';
+import { Editor } from '@tinymce/tinymce-react';
+import { useDropzone } from 'react-dropzone';
+import upload from '../../assets/upload.svg';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -153,20 +156,56 @@ const CustomDatePicker = ({ userDate, onChange }: any) => {
   );
 };
 
+const TinyMCE = ({ handleChange }: any) => {
+  return (
+    <Editor
+      apiKey="5b8nq1ms6dc9aeen0bebkynexr915449nw66x9yx9ihp0y2x"
+      init={{
+        language: 'ru',
+        height: 260,
+        plugins: ['lists'],
+        toolbar: 'blocks | bullist numlist',
+        placeholder:
+          'Приложите ссылку на страницу. Расскажите, каким должен быть результат',
+      }}
+      onChange={handleChange}
+    />
+  );
+};
+
+const Basic = () => {
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+
+  useEffect(() => {
+    console.log(acceptedFiles);
+  }, [acceptedFiles]);
+
+  return (
+    <section className={styles.uploadFiles}>
+      <div {...getRootProps({ className: 'dropzone' })}>
+        <input {...getInputProps()} />
+        <img src={upload} alt="" />
+        <p>Выбрать файлы</p>
+      </div>
+    </section>
+  );
+};
+
 interface Data {
   dep: string;
   title: string;
   priority: string | null;
   day: null | Date;
+  description: string;
 }
 
 const AddTask: FC<AddTaskProps> = ({ projectName }) => {
-
   const [data, setData] = useState<Data>({
     dep: 'other',
     title: '',
     priority: null,
     day: null,
+    description: '',
   });
 
   const changeDep = (e: ChangeEvent<HTMLInputElement>) => {
@@ -227,30 +266,28 @@ const AddTask: FC<AddTaskProps> = ({ projectName }) => {
         />
         <CustomDatePicker
           userDate={data.day}
-          onChange={(date: any) => setData({...data, day: date})}
+          onChange={(date: any) => setData({ ...data, day: date })}
         />
-        {/* <label htmlFor="deadline" className={styles.deadline}>
-          Дедлайн
-          <span>выбрать дату</span>
-          <input type="date" name="date" id="deadline" />
-        </label> */}
       </div>
-      <div className={styles.addTskBottom}>
-        <p>Загрузите скриншоты</p>
-        <input type="file" name="screenshots" id="screenshots" />
-        <p>Опишите задачу подробно</p>
-        <textarea name="task_description" id="task_description"></textarea>
+      <div className={`${styles.addTskBottom} container`}>
+        <p className={styles.subtitle}>Загрузите скриншоты</p>
+        {/* <input type="file" name="screenshots" id="screenshots" /> */}
+        <Basic />
+        <p className={styles.subtitle}>Опишите задачу подробно</p>
+        <TinyMCE
+          handleChange={(content: any, editor: any) =>
+            setData({ ...data, description: editor.getContent() })
+          }
+        />
       </div>
       <div className="container">
         <Button
           clickHandler={() => {
             const realData = Object.fromEntries(
-              Object.entries(data).filter(
-                ([key, value]) => value !== null
-              )
+              Object.entries(data).filter(([key, value]) => value !== null)
             );
             if (Object.keys(realData).includes('day')) {
-              realData.day = new Date(realData.day).toLocaleDateString()
+              realData.day = new Date(realData.day).toLocaleDateString();
             }
             console.log(realData);
           }}>

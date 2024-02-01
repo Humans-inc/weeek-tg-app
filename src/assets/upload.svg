@@ -1,0 +1,16 @@
+<svg width="48.000000" height="48.000000" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<clipPath id="clip4_4531">
+			<rect id="Icons/upload" width="20.000000" height="20.000000" transform="translate(14.000000 14.000000)" fill="white" fill-opacity="0"/>
+		</clipPath>
+	</defs>
+	<circle id="Ellipse 2857" cx="24.000000" cy="24.000000" r="24.000000" fill="#FFFFFF" fill-opacity="1.000000"/>
+	<g clip-path="url(#clip4_4531)">
+		<path id="Vector" d="M31.5 26.5L31.5 29.8333C31.5 30.2754 31.3244 30.6993 31.0118 31.0118C30.6993 31.3244 30.2754 31.5 29.8333 31.5L18.1667 31.5C17.7246 31.5 17.3007 31.3244 16.9882 31.0118C16.6756 30.6993 16.5 30.2754 16.5 29.8333L16.5 26.5" stroke="#7784EE" stroke-opacity="1.000000" stroke-width="2.000000" stroke-linejoin="round" stroke-linecap="round"/>
+		<path id="Vector" d="M28.1667 20.6667L24 16.5L19.8333 20.6667" stroke="#7784EE" stroke-opacity="1.000000" stroke-width="2.000000" stroke-linejoin="round" stroke-linecap="round"/>
+		<path id="Vector" d="M24 16.5L24 26.5" stroke="#7784EE" stroke-opacity="1.000000" stroke-width="2.000000" stroke-linejoin="round" stroke-linecap="round"/>
+	</g>
+</svg>

@@ -127,3 +127,37 @@
     color: #ffffff;
   }
 }
+.addTskBottom {
+  position: relative;
+
+  .subtitle {
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 137%;
+    color: #292a2d;
+  }
+}
+
+.uploadFiles {
+  margin-bottom: 40px;
+  border-radius: 6px;
+  border: 2px dashed #7784ee;
+
+  & > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    padding: 18px;
+  }
+
+  p {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: -2%;
+    color: #7784ee;
+  }
+}
