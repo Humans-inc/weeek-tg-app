@@ -1,24 +1,40 @@
-// import { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NoAccess } from '../NoAccess/NoAccess';
 import styles from './App.module.scss';
 import { AddTask } from '../AddTask/AddTask';
+import { useEffect, useState } from 'react';
 
 const App = () => {
-  // const [haveAccess, setHaveAccess] = useState(true);
+  const [haveAccess, setHaveAccess] = useState(false);
+  const [projectName, setProjectName] = useState('');
 
-  // useEffect(() => {
-  //   fetch(
-  //     `https://s1.hmns.in/bot/?user_id=168348590&chat_id=-1002030267309&key=JZoQovd6aROzgV50dy9LyJypW06tXlEw`
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => console.log(data));
-  // }, []);
+  const tg = window.Telegram.WebApp;
+  const userId = tg.initDataUnsafe.user?.id;
 
-  const haveAccess = true;
+  const searchString = new URLSearchParams(window.location.search);
+  const params: any[] = [];
+  searchString.forEach((value) => {
+    params.push(value);
+  });
+  const chatId = atob(params[0]);
+
+  useEffect(() => {
+    fetch(`https://s1.hmns.in/bot/get-tasks?chat=${chatId}&user=${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.access) {
+          setHaveAccess(true);
+          setProjectName(data.project);
+        }
+      })
+      .catch((e) => console.error(e));
+  }, []);
 
   return (
     <div className={styles.app}>
-      {haveAccess ? <AddTask projectName="TEST API" /> : <NoAccess />}
+      {haveAccess ? <AddTask projectName={projectName} /> : <NoAccess />}
     </div>
   );
 };

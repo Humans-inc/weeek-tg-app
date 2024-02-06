@@ -5,7 +5,6 @@ import {Button} from '../UI/Button/Button';
 
 const NoAccess: FC = () => {
   const tg = window.Telegram.WebApp;
-  console.log(tg);
   tg.expand();
   return (
     <div className={styles.noAccess}>
