@@ -17,7 +17,14 @@ const App = () => {
   searchString.forEach((value) => {
     params.push(value);
   });
-  const chatId = atob(params[0]);
+  const paramsObj = JSON.parse(atob(params[0]));
+  const chatId = paramsObj.chat_id;
+
+  console.log({
+    userId,
+    chatId,
+    chatIdTG: tg.initDataUnsafe.chat?.id,
+  });
 
   useEffect(() => {
     fetch(`https://s1.hmns.in/bot/get-tasks?chat=${chatId}&user=${userId}`)
