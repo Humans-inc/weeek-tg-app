@@ -3,7 +3,7 @@
 import { NoAccess } from '../NoAccess/NoAccess';
 import styles from './App.module.scss';
 import { AddTask } from '../AddTask/AddTask';
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loader from '../../Loader/Loader';
 
 const App = () => {
