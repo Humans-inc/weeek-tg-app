@@ -7,8 +7,8 @@ import { Suspense, useEffect, useState } from 'react';
 import Loader from '../../Loader/Loader';
 
 const App = () => {
-  const [haveAccess, setHaveAccess] = useState(false);
-  // const [isLoading, setIsLoading] = useState(false);
+  const [haveAccess, setHaveAccess] = useState<boolean | undefined>();
+  const [isLoading, setIsLoading] = useState(false);
   const [projectName, setProjectName] = useState('');
 
   const tg = window.Telegram.WebApp;
@@ -36,20 +36,20 @@ const App = () => {
         if (data.access) {
           setHaveAccess(true);
           setProjectName(data.project);
+        } else {
+          setHaveAccess(false);
         }
       })
       .catch((e) => console.error(e))
-      // .finally(() => {
-      //   setIsLoading(true);
-      // })
+      .finally(() => {
+        setIsLoading(true);
+      })
   }, []);
 
   return (
     <div className={styles.app}>
-      <Suspense fallback={<Loader/>}>
-        {haveAccess ? <AddTask projectName={projectName} /> : <NoAccess />}
-      </Suspense>
-      {/* {isLoading ? null : <Loader />} */}
+      {haveAccess ? <AddTask projectName={projectName} /> : <NoAccess />}
+      {isLoading ? null : <Loader />}
     </div>
   );
 };
