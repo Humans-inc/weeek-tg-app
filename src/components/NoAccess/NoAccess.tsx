@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import styles from './NoAccess.module.scss';
-import {Button} from '../UI/Button/Button';
+import { Button } from '../UI/Button/Button';
 
 const NoAccess: FC = () => {
   const tg = window.Telegram.WebApp;
@@ -10,6 +10,7 @@ const NoAccess: FC = () => {
     <div className={styles.noAccess}>
       <div className={`container ${styles.container}`}>
         <img src="/webapp/images/humans.svg" alt="logo" width="150" />
+        <div className={styles.background}></div>
         <div className={styles.bottom}>
           <h1 className={styles.bottomTitle}>У вас нет доступа</h1>
           <p className={styles.bottomDescr}>

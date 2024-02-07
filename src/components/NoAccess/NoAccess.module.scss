@@ -1,6 +1,5 @@
 .noAccess {
   min-height: 100svh;
-  background: #F8F8F8 url('/images/error-1.png') no-repeat center top 104px;
 }
 .container {
   display: flex;
@@ -10,6 +9,11 @@
   gap: 40px;
   min-height: 100svh;
   padding: 30px 28px;
+}
+.background {
+  flex: 1 1 100%;
+  width: 100%;
+  background: url('/images/error-1.png') no-repeat center / contain;
 }
 .bottom {
   margin-top: auto;
