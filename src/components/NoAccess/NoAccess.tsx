@@ -1,10 +1,12 @@
-import { FC } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { FC, useContext } from 'react';
 
 import styles from './NoAccess.module.scss';
 import { Button } from '../UI/Button/Button';
+import { TelegramContext } from '../../main';
 
 const NoAccess: FC = () => {
-  const tg = window.Telegram.WebApp;
+  const tg: any = useContext(TelegramContext);
   tg.expand();
   return (
     <div className={styles.noAccess}>

@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FC, useState, ChangeEvent, forwardRef, Ref, useEffect } from 'react';
+import { FC, useState, ChangeEvent, useContext } from 'react';
 import styles from './AddTask.module.scss';
 import { Button } from '../UI/Button/Button';
 import Select from 'react-select';
-import DatePicker from 'react-datepicker';
-import ru from 'date-fns/locale/ru';
-import { Editor } from '@tinymce/tinymce-react';
-import { useDropzone } from 'react-dropzone';
-import upload from '../../assets/upload.svg';
+
 
 import 'react-datepicker/dist/react-datepicker.css';
+import { TelegramContext } from '../../main';
+import { AddTaskProps, DataNewTask } from '../../utils/types';
+import { DropZone } from '../DropZone/DropZone';
+import { TinyMCE } from '../TinyMCE/TinyMCE';
+import { CustomDatePicker } from '../CustomDatePicker/CustomDatePicker';
 
 const options = [
   { value: 'none', label: 'Без приоритета' },
@@ -122,133 +123,51 @@ const customStyles = {
   }),
 };
 
-interface AddTaskProps {
-  projectName: string;
-}
+const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
+  const tg: any = useContext(TelegramContext);
 
-interface CustomInputProps {
-  value?: string | null;
-  onClick?: () => void;
-}
-const CustomDatePicker = ({ userDate, onChange }: any) => {
-  const CustomInput = forwardRef(
-    ({ value, onClick }: CustomInputProps, ref: Ref<HTMLButtonElement>) => (
-      <button
-        className={`${styles.deadline} ${value ? styles.full : null}`}
-        onClick={onClick}
-        ref={ref}>
-        Дедлайн
-        <span>
-          {value
-            ? new Date(value!.toString()).toLocaleDateString()
-            : 'Выбрать дату'}
-        </span>
-      </button>
-    )
-  );
-  return (
-    <DatePicker
-      selected={userDate}
-      onChange={onChange}
-      customInput={<CustomInput />}
-      locale={ru}
-    />
-  );
-};
-
-const TinyMCE = ({ handleChange }: any) => {
-  return (
-    <Editor
-      apiKey="v6gobd9x6i3c23v657raceriks3k7hul4wz2dybpu8pp03ni"
-      init={{
-        language: 'ru',
-        height: 260,
-        plugins: ['lists'],
-        toolbar: 'blocks | bullist numlist',
-        menubar: false,
-        placeholder:
-          'Приложите ссылку на страницу. Расскажите, каким должен быть результат',
-      }}
-      onChange={handleChange}
-    />
-  );
-};
-
-const Basic = () => {
-  const [files, setFiles] = useState([]);
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    accept: {
-      'image/jpeg': [],
-      'image/png': [],
-    },
-    maxFiles: 4,
-  });
-
-  useEffect(() => {
-    if (acceptedFiles.length) {
-      const formData = new FormData();
-      acceptedFiles.forEach((image) => formData.append('images', image));
-      fetch('https://s1.hmns.in/upload', { method: 'POST', body: formData })
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            console.log({ bad: res.status });
-          }
-        })
-        .then((data) => setFiles(data))
-        .catch((e) => console.error(e));
-    }
-  }, [acceptedFiles]);
-
-  useEffect(() => {
-    console.log(files);
-  }, [files]);
-
-  /*
-  {
-    "id": "936e3ebc219a20c",
-    "name": "936e3ebc219a20c.png",
-    "size": 250,
-    "uploadDate": "2024-02-01T17:05:33.348Z",
-    "url": "https://s1.hmns.in/files/936e3ebc219a20c.png"
-  }
-  */
-  return (
-    <section>
-      <div
-        {...getRootProps({ className: 'dropzone' })}
-        className={styles.uploadFiles}>
-        <input {...getInputProps()} />
-        <img src={upload} alt="" />
-        <p>Выбрать файлы</p>
-      </div>
-      <div>
-        {files.length > 0 && files.map((file, index) => <p>{index}</p>)}
-      </div>
-    </section>
-  );
-};
-
-interface Data {
-  dep: string;
-  title: string;
-  priority: string | null;
-  day: null | Date;
-  description: string;
-}
-
-const AddTask: FC<AddTaskProps> = ({ projectName }) => {
-  const [data, setData] = useState<Data>({
-    dep: 'other',
+  const [data, setData] = useState<DataNewTask>({
+    category: 'other',
     title: '',
     priority: null,
     day: null,
     description: '',
   });
 
-  const changeDep = (e: ChangeEvent<HTMLInputElement>) => {
-    setData({ ...data, dep: e.target.value });
+  const changeCategory = (e: ChangeEvent<HTMLInputElement>) => {
+    setData({ ...data, category: e.target.value });
+  };
+
+  const sendNewTask = () => {
+    const realData = Object.fromEntries(
+      Object.entries(data).filter(([key, value]) => value !== null)
+    );
+    if (Object.keys(realData).includes('day')) {
+      realData.day = new Date(realData.day).toLocaleDateString();
+    }
+    console.log(realData);
+
+    const formData = new FormData();
+    Object.entries(realData).forEach(([key, value]) => {
+      formData.set(key, value);
+    });
+    for (const pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+
+    fetch(`https://s1.hmns.in/bot/create-task?project=${projectId}`, {
+      method: 'POST',
+      body: JSON.stringify(realData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((resData) => {
+        console.log(resData);
+        tg.close();
+      })
+      .catch((e) => console.error(e));
   };
 
   return (
@@ -270,9 +189,17 @@ const AddTask: FC<AddTaskProps> = ({ projectName }) => {
             <input
               type="radio"
               name="dep"
+              id="other"
+              value="other"
+              onChange={(e) => changeCategory(e)}
+            />
+            <label htmlFor="other">Другое</label>
+            <input
+              type="radio"
+              name="dep"
               id="design"
               value="design"
-              onChange={(e) => changeDep(e)}
+              onChange={(e) => changeCategory(e)}
             />
             <label htmlFor="design">Дизайнеры</label>
             <input
@@ -280,7 +207,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName }) => {
               name="dep"
               id="tech"
               value="tech"
-              onChange={(e) => changeDep(e)}
+              onChange={(e) => changeCategory(e)}
             />
             <label htmlFor="tech">Тех спецы</label>
             <input
@@ -288,7 +215,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName }) => {
               name="dep"
               id="dev"
               value="dev"
-              onChange={(e) => changeDep(e)}
+              onChange={(e) => changeCategory(e)}
             />
             <label htmlFor="dev">Разработчики</label>
           </div>
@@ -310,8 +237,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName }) => {
       </div>
       <div className={`${styles.addTskBottom} container`}>
         <p className={styles.subtitle}>Загрузите скриншоты</p>
-        {/* <input type="file" name="screenshots" id="screenshots" /> */}
-        <Basic />
+        <DropZone />
         <p className={styles.subtitle}>Опишите задачу подробно</p>
         <TinyMCE
           handleChange={(content: any, editor: any) =>
@@ -320,18 +246,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName }) => {
         />
       </div>
       <div className="container">
-        <Button
-          clickHandler={() => {
-            const realData = Object.fromEntries(
-              Object.entries(data).filter(([key, value]) => value !== null)
-            );
-            if (Object.keys(realData).includes('day')) {
-              realData.day = new Date(realData.day).toLocaleDateString();
-            }
-            console.log(realData);
-          }}>
-          Отправить задачу
-        </Button>
+        <Button clickHandler={sendNewTask}>Отправить задачу</Button>
       </div>
     </div>
   );

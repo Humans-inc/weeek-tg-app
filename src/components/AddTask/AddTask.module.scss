@@ -52,8 +52,8 @@
   color: #fcfcfc;
 }
 .depWrapper {
-  width: 100%;
-  margin-bottom: 24px;
+  // width: 100%;
+  margin : 0 -24px 24px;
   overflow-x: auto;
   scrollbar-width: none;
   &::-webkit-scrollbar {
@@ -64,7 +64,7 @@
 .deps {
   display: flex;
   justify-content: flex-start;
-  gap: 8px;
+  // gap: 8px;
 
   input {
     display: none;
@@ -79,6 +79,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: 8px;
     padding: 8px 16px;
     border-radius: 8px;
     font-size: 16px;
@@ -86,47 +87,15 @@
     font-weight: 400;
     line-height: 22px;
     color: #b7bfff;
+    &:first-of-type {
+      margin-left: 24px;
+    }
+    &:last-child {
+      margin-right: 24px;
+    }
   }
 }
-.deadline {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 2px;
-  width: 100%;
-  margin-top: 24px;
-  padding-left: 50px;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 125%;
-  letter-spacing: -0.02em;
-  color: #fff;
-  background: transparent;
 
-  span {
-    font-weight: 400;
-    font-size: 12px;
-    color: #b7bfff;
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 38px;
-    height: 38px;
-    background: url(/images/deadline.svg) no-repeat center / contain;
-  }
-}
-.full {
-  span {
-    color: #ffffff;
-  }
-}
 .addTskBottom {
   position: relative;
 
@@ -139,22 +108,4 @@
   }
 }
 
-.uploadFiles {
-  margin-bottom: 40px;
-  border-radius: 6px;
-  border: 2px dashed #7784ee;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 8px;
-  padding: 18px;
 
-  p {
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 16px;
-    letter-spacing: -2%;
-    color: #7784ee;
-  }
-}

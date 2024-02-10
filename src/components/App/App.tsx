@@ -3,15 +3,19 @@
 import { NoAccess } from '../NoAccess/NoAccess';
 import styles from './App.module.scss';
 import { AddTask } from '../AddTask/AddTask';
-import { useEffect, useState } from 'react';
-import Loader from '../../Loader/Loader';
+import { useContext, useEffect, useState } from 'react';
+import Loader from '../UI/Loader/Loader';
+import { TelegramContext } from '../../main';
 
 const App = () => {
   const [haveAccess, setHaveAccess] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState(false);
-  const [projectName, setProjectName] = useState('');
+  const [projectData, setProjectData] = useState({
+    projectName: '',
+    projectId: '',
+  });
 
-  const tg = window.Telegram.WebApp;
+  const tg: any = useContext(TelegramContext);
   const userId = tg.initDataUnsafe.user?.id;
 
   const searchString = new URLSearchParams(window.location.search);
@@ -28,6 +32,9 @@ const App = () => {
     chatIdTG: tg.initDataUnsafe.chat?.id,
   });
 
+  // const userId = '168348590';
+  // const chatId = '-1002079262956';
+
   useEffect(() => {
     fetch(`https://s1.hmns.in/bot/get-tasks?chat=${chatId}&user=${userId}`)
       .then((res) => res.json())
@@ -35,7 +42,7 @@ const App = () => {
         console.log(data);
         if (data.access) {
           setHaveAccess(true);
-          setProjectName(data.project);
+          setProjectData({ projectName: data.project, projectId: data.id });
         } else {
           setHaveAccess(false);
         }
@@ -43,13 +50,13 @@ const App = () => {
       .catch((e) => console.error(e))
       .finally(() => {
         setIsLoading(true);
-      })
+      });
   }, []);
 
   return (
     <div className={styles.app}>
-      {haveAccess ? <AddTask projectName={projectName} /> : <NoAccess />}
       {isLoading ? null : <Loader />}
+      {haveAccess ? <AddTask {...projectData} /> : <NoAccess />}
     </div>
   );
 };
