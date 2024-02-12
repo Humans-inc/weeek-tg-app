@@ -136,11 +136,14 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
     description: '',
   });
 
+  const [isSending, setIsSending] = useState(false);
+
   const changeCategory = (e: ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, category: e.target.value });
   };
 
   const sendNewTask = () => {
+    setIsSending(true);
     const realData = Object.fromEntries(
       Object.entries(data).filter(([key, value]) => value !== null)
     );
@@ -154,7 +157,8 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
           (realData.description += `<img src='${item.getAttribute('src')}'/>`)
       );
 
-    realData.description = `<h3>${userName}</h3>` + realData.description;
+    realData.description =
+      `<h3>Задача от: ${userName}</h3>` + realData.description;
 
     const formData = new FormData();
     Object.entries(realData).forEach(([key, value]) => {
@@ -174,9 +178,12 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
       .then((res) => res.json())
       .then((resData) => {
         console.log(resData);
-        tg.close();
+        setIsSending(false);
       })
-      .catch((e) => console.error(e));
+      .catch((e) => console.error(e))
+      .finally(() => {
+        tg.close();
+      });
   };
 
   return (
@@ -255,7 +262,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
         />
       </div>
       <div className="container">
-        <Button clickHandler={sendNewTask}>Отправить задачу</Button>
+        <Button clickHandler={sendNewTask} classList={`${isSending ? 'inProgress' : null}`}>Отправить задачу</Button>
       </div>
     </div>
   );

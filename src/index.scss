@@ -25,6 +25,7 @@ button {
   color: #5f6ddd;
   background: #d2d7ff;
   gap: 10px;
+  pointer-events: none;
   &::before {
     content: '';
     display: block;
