@@ -24,6 +24,7 @@ const DropZone: FC<DropZoneProps> = ({ handleFiles }) => {
     onDrop,
     accept: {
       'image/jpeg': [],
+      'image/jpg': [],
       'image/png': [],
     },
     maxFiles: 4,
