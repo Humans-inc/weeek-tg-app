@@ -1,21 +1,27 @@
-import { useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState, useEffect, useCallback, FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import upload from '../../assets/upload.svg';
 import styles from './DropZone.module.scss';
 import { FilePreview } from '../FilePreview/FilePreview';
 
-export interface File {
-  id: string;
-  orig: string;
-  name: string;
-  size: number;
-  uploadDate: string;
-  url: string;
+interface DropZoneProps {
+  handleFiles: any;
 }
 
-const DropZone = () => {
-  const [files, setFiles] = useState<File[]>([]);
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+const DropZone: FC<DropZoneProps> = ({ handleFiles }) => {
+  const [files, setFiles] = useState<any[]>([]);
+
+  const onDrop = useCallback(
+    (acceptedFiles: any) => {
+      setFiles([...files, ...acceptedFiles]);
+    },
+    [files]
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
     accept: {
       'image/jpeg': [],
       'image/png': [],
@@ -24,34 +30,14 @@ const DropZone = () => {
   });
 
   useEffect(() => {
-    if (acceptedFiles.length) {
-      const formData = new FormData();
-      acceptedFiles.forEach((image) => formData.append('images', image));
-      fetch('https://s1.hmns.in/upload', { method: 'POST', body: formData })
-        .then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else {
-            console.log({ bad: res.status });
-          }
-        })
-        .then((data) => setFiles(data))
-        .catch((e) => console.error(e));
-    }
-  }, [acceptedFiles]);
-
-  useEffect(() => {
-    console.log(files);
+    handleFiles(files);
   }, [files]);
 
-  // {
-  //   "id": "723230d9ce218da",
-  //   "orig": "Frame 86.png",
-  //   "name": "723230d9ce218da.png",
-  //   "size": 170,
-  //   "uploadDate": "2024-02-12T13:47:41.250Z",
-  //   "url": "https://s1.hmns.in/files/723230d9ce218da.png"
-  // }
+  const removeFile = (file: any) => () => {
+    const newFiles = [...files];
+    newFiles.splice(newFiles.indexOf(file), 1);
+    setFiles(newFiles);
+  };
 
   return (
     <section>
@@ -64,9 +50,44 @@ const DropZone = () => {
       </div>
       <div style={{ marginBottom: '40px' }}>
         {files.length > 0 &&
-          files.map((file, index) => (
-            <FilePreview {...file} key={`${file.size}-${index}`} />
-          ))}
+          files.map((file: any, index) => {
+            const fileObj = Object.assign(file, {
+              preview: URL.createObjectURL(file),
+            });
+
+            return (
+              <div className={styles.fileWrap} key={`${file.size}-${index}`}>
+                <FilePreview
+                  orig={file.path}
+                  size={file.size}
+                  url={fileObj.preview}
+                />
+                <button className={styles.deleteImg} onClick={removeFile(file)}>
+                  <svg
+                    width="24"
+                    height="25"
+                    viewBox="0 0 24 25"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M18 6.55147L6 18.5515"
+                      stroke="#292A2D"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M6 6.55147L18 18.5515"
+                      stroke="#292A2D"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+              </div>
+            );
+          })}
       </div>
     </section>
   );

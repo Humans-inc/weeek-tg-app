@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FC, useState, ChangeEvent, useContext } from 'react';
+import { FC, useState, ChangeEvent, useContext, useEffect } from 'react';
 import styles from './AddTask.module.scss';
 import { Button } from '../UI/Button/Button';
 import Select from 'react-select';
@@ -128,6 +128,8 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
     tg.initDataUnsafe.user.last_name ? tg.initDataUnsafe.user.last_name : null
   }`;
 
+  // const userName = 'Some Name';
+
   const [data, setData] = useState<DataNewTask>({
     category: 'other',
     title: '',
@@ -137,24 +139,28 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
   });
 
   const [isSending, setIsSending] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
 
   const changeCategory = (e: ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, category: e.target.value });
   };
 
-  const sendNewTask = () => {
-    setIsSending(true);
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
+
+  const sendData = (images = []) => {
     const realData = Object.fromEntries(
       Object.entries(data).filter(([key, value]) => value !== null)
     );
     if (Object.keys(realData).includes('day')) {
       realData.day = new Date(realData.day).toLocaleDateString();
     }
-    const images = document.querySelectorAll('[data-wrapper="wrapper"] img');
+    
     images.length &&
       images.forEach(
-        (item) =>
-          (realData.description += `<img src='${item.getAttribute('src')}'/>`)
+        (item: any) =>
+          (realData.description += `<img src='${item.url}'/>`)
       );
 
     realData.description =
@@ -183,7 +189,35 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
       .catch((e) => console.error(e))
       .finally(() => {
         tg.close();
+        // console.log('close');
       });
+  };
+
+  const sendNewTask = () => {
+    if (data.title.length) {
+      setIsSending(true);
+
+      if (files.length) {
+        const formData = new FormData();
+        files.forEach((image) => formData.append('images', image));
+        fetch('https://s1.hmns.in/upload', { method: 'POST', body: formData })
+          .then((res) => {
+            if (res.ok) {
+              return res.json();
+            } else {
+              console.log({ bad: res.status });
+            }
+          })
+          .then((resFiles) => {
+            sendData(resFiles);
+          })
+          .catch((e) => console.error(e));
+      } else {
+        sendData();
+      }
+    } else {
+      alert('Напишите название задачи');
+    }
   };
 
   return (
@@ -208,6 +242,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
               id="other"
               value="other"
               onChange={(e) => changeCategory(e)}
+              checked={data.category === 'other'}
             />
             <label htmlFor="other">Другое</label>
             <input
@@ -216,6 +251,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
               id="design"
               value="design"
               onChange={(e) => changeCategory(e)}
+              checked={data.category === 'design'}
             />
             <label htmlFor="design">Дизайнеры</label>
             <input
@@ -224,6 +260,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
               id="tech"
               value="tech"
               onChange={(e) => changeCategory(e)}
+              checked={data.category === 'tech'}
             />
             <label htmlFor="tech">Тех спецы</label>
             <input
@@ -232,6 +269,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
               id="dev"
               value="dev"
               onChange={(e) => changeCategory(e)}
+              checked={data.category === 'dev'}
             />
             <label htmlFor="dev">Разработчики</label>
           </div>
@@ -253,7 +291,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
       </div>
       <div className={`${styles.addTskBottom} container`}>
         <p className={styles.subtitle}>Загрузите скриншоты</p>
-        <DropZone />
+        <DropZone handleFiles={(files: File[]) => setFiles(files)} />
         <p className={styles.subtitle}>Опишите задачу подробно</p>
         <TinyMCE
           handleChange={(content: any, editor: any) =>
@@ -262,7 +300,11 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
         />
       </div>
       <div className="container">
-        <Button clickHandler={sendNewTask} classList={`${isSending ? 'inProgress' : null}`}>Отправить задачу</Button>
+        <Button
+          clickHandler={sendNewTask}
+          classList={`${isSending ? 'inProgress' : null}`}>
+          Отправить задачу
+        </Button>
       </div>
     </div>
   );
