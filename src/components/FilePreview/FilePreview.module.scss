@@ -1,0 +1,67 @@
+
+.imageWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+.progressWrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -12px;
+  width: 100%;
+  height: 4px;
+  padding: 1px;
+  border-radius: 4px;
+  background: #e1e1e1;
+}
+.progress {
+  width: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: #77d2a6;
+  transition: width 5s;
+}
+.imagePreview {
+  width: 31px;
+  height: 35px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.imageName,
+.imageSize {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 133%;
+  letter-spacing: -0.02em;
+  text-align-last: left;
+  color: #292a2d;
+}
+.done {
+  span {
+    color: #25b26f;
+  }
+  .progress {
+    width: 100%;
+  }
+}
+.deleteImg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  svg {
+    display: block;
+  }
+}

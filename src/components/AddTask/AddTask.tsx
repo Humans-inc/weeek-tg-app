@@ -5,7 +5,6 @@ import styles from './AddTask.module.scss';
 import { Button } from '../UI/Button/Button';
 import Select from 'react-select';
 
-
 import 'react-datepicker/dist/react-datepicker.css';
 import { TelegramContext } from '../../main';
 import { AddTaskProps, DataNewTask } from '../../utils/types';
@@ -125,6 +124,9 @@ const customStyles = {
 
 const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
   const tg: any = useContext(TelegramContext);
+  const userName = `${tg.initDataUnsafe.user.first_name} ${
+    tg.initDataUnsafe.user.last_name ? tg.initDataUnsafe.user.last_name : null
+  }`;
 
   const [data, setData] = useState<DataNewTask>({
     category: 'other',
@@ -145,7 +147,14 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
     if (Object.keys(realData).includes('day')) {
       realData.day = new Date(realData.day).toLocaleDateString();
     }
-    console.log(realData);
+    const images = document.querySelectorAll('[data-wrapper="wrapper"] img');
+    images.length &&
+      images.forEach(
+        (item) =>
+          (realData.description += `<img src='${item.getAttribute('src')}'/>`)
+      );
+
+    realData.description = `<h3>${userName}</h3>` + realData.description;
 
     const formData = new FormData();
     Object.entries(realData).forEach(([key, value]) => {
