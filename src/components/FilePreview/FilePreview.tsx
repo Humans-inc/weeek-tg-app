@@ -14,7 +14,8 @@ const FilePreview: FC<FilePrviewProps> = (props) => {
       ? `${Math.trunc(props.size / 1024)} kb`
       : `${props.size} b`;
   const fileName = decodeURIComponent(escape(props.orig));
-  const transition = Math.trunc(props.size / 1024);
+  let transition = Math.trunc(props.size / 1024);
+  if (transition > 2500) transition = 2500;
 
   const [state, setState] = useState('загрузка...');
   const [isDone, setIsDone] = useState(false);

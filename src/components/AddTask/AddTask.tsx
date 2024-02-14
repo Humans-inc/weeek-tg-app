@@ -291,14 +291,6 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
       </div>
       <div className={`${styles.addTskBottom} container`}>
         <p className={styles.subtitle}>Загрузите скриншоты</p>
-        <input
-          type="file"
-          name=""
-          id=""
-          accept="image/png, image/jpeg, image/jpg"
-          multiple={true}
-          capture
-        />
         <DropZone handleFiles={(files: File[]) => setFiles(files)} />
         <p className={styles.subtitle}>Опишите задачу подробно</p>
         <TinyMCE
