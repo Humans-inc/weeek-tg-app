@@ -297,6 +297,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
           id=""
           accept="image/png, image/jpeg, image/jpg"
           multiple={true}
+          capture
         />
         <DropZone handleFiles={(files: File[]) => setFiles(files)} />
         <p className={styles.subtitle}>Опишите задачу подробно</p>
