@@ -229,7 +229,9 @@ const AllTasks: any = (props: any) => {
       </div>
       <div className={`${styles.taskPage} ${isVisible ? 'visible' : ''}`}>
         <div className={styles.activeTaskHeader}>
-          <a href="" className={styles.activeTaskLink}>
+          <a
+            href={`https://app.weeek.net/ws/452020/task/${activeTask[0].id}`}
+            className={styles.activeTaskLink}>
             {activeTask[0].id}
             <svg
               width="12"
