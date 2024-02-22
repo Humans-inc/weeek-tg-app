@@ -67,6 +67,28 @@ button {
 .tox .tox-statusbar {
   display: none !important;
 }
+.priority-0 {
+  color: #279600;
+  background: #D4EACC;
+}
+.priority-1 {
+  color: #DF8412;
+  background: #F9E6D0;
+}
+.priority-2 {
+  color: #FF001F;
+  background: #FFCCD2;
+}
+.priority-3 {
+  color: #4577EF;
+  background: #CCDAFF;
+}
+
+.visible {
+  top: 20px;
+  bottom: 0;
+}
+
 
 .hidden {
   display: none !important;

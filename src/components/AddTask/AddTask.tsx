@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { FC, useState, ChangeEvent, useContext, useEffect } from 'react';
+import { FC, useState, ChangeEvent, useContext } from 'react';
 import styles from './AddTask.module.scss';
 import { Button } from '../UI/Button/Button';
 import Select from 'react-select';
@@ -122,7 +122,11 @@ const customStyles = {
   }),
 };
 
-const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
+const AddTask: FC<AddTaskProps> = ({
+  projectName,
+  projectId,
+  handleVisible,
+}) => {
   const tg: any = useContext(TelegramContext);
   const userName = `${tg.initDataUnsafe.user.first_name} ${
     tg.initDataUnsafe.user.last_name ? tg.initDataUnsafe.user.last_name : null
@@ -145,10 +149,6 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
     setData({ ...data, category: e.target.value });
   };
 
-  useEffect(() => {
-    console.log(files);
-  }, [files]);
-
   const sendData = (images = []) => {
     const realData = Object.fromEntries(
       Object.entries(data).filter(([key, value]) => value !== null)
@@ -156,11 +156,10 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
     if (Object.keys(realData).includes('day')) {
       realData.day = new Date(realData.day).toLocaleDateString();
     }
-    
+
     images.length &&
       images.forEach(
-        (item: any) =>
-          (realData.description += `<img src='${item.url}'/>`)
+        (item: any) => (realData.description += `<img src='${item.url}'/>`)
       );
 
     realData.description =
@@ -188,8 +187,7 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
       })
       .catch((e) => console.error(e))
       .finally(() => {
-        tg.close();
-        // console.log('close');
+        handleVisible();
       });
   };
 
@@ -222,6 +220,22 @@ const AddTask: FC<AddTaskProps> = ({ projectName, projectId }) => {
 
   return (
     <div className={styles.addTask}>
+      <button className={styles.close} onClick={handleVisible}>
+        <svg
+          width="16"
+          height="17"
+          viewBox="0 0 16 17"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M12 4.5L4 12.5M4 4.5L12 12.5"
+            stroke="white"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
       <div className={styles.addTaskTop}>
         <h1 className={styles.title}>Добавить задачу</h1>
         <p className={styles.projectName}>в проект “{projectName}”</p>

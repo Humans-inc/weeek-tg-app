@@ -1,21 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NoAccess } from '../NoAccess/NoAccess';
-import styles from './App.module.scss';
-import { AddTask } from '../AddTask/AddTask';
 import { useContext, useEffect, useState } from 'react';
 import Loader from '../UI/Loader/Loader';
 import { TelegramContext } from '../../main';
+import { AllTasks } from '../AllTasks/AllTasks';
 
 const App = () => {
   const [haveAccess, setHaveAccess] = useState<boolean | undefined>();
   const [isLoading, setIsLoading] = useState(false);
-  const [projectData, setProjectData] = useState({
-    projectName: '',
-    projectId: '',
-  });
+  const [projectData, setProjectData] = useState({});
 
   const tg: any = useContext(TelegramContext);
+  console.log(tg)
   const userId = tg.initDataUnsafe.user?.id;
 
   const searchString = new URLSearchParams(window.location.search);
@@ -39,10 +36,9 @@ const App = () => {
     fetch(`https://s1.hmns.in/bot/get-tasks?chat=${chatId}&user=${userId}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         if (data.access) {
           setHaveAccess(true);
-          setProjectData({ projectName: data.project, projectId: data.id });
+          setProjectData(data);
         } else {
           setHaveAccess(false);
         }
@@ -54,9 +50,10 @@ const App = () => {
   }, []);
 
   return (
-    <div className={styles.app}>
+    <div>
       {isLoading ? null : <Loader />}
-      {haveAccess ? <AddTask {...projectData} /> : <NoAccess />}
+      {/* {haveAccess ? <AddTask {...projectData} /> : <NoAccess />} */}
+      {haveAccess ? <AllTasks {...projectData} /> : <NoAccess />}
     </div>
   );
 };

@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReactNode } from "react";
 
 export interface AddTaskProps {
   projectName: string;
   projectId: string;
+  handleVisible: any;
 }
 
 export interface DataNewTask {
@@ -22,4 +24,9 @@ export interface ButtonProps {
 export interface CustomInputProps {
   value?: string | null;
   onClick?: () => void;
+}
+
+export interface TasksFilters {
+  departament: string;
+  state: string;
 }

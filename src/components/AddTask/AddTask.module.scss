@@ -1,6 +1,15 @@
 .addTask {
+  position: fixed;
+  inset: 0;
   min-height: 100svh;
   background: #eee;
+  overflow-y: auto;
+  scrollbar-width: none;
+  z-index: 3;
+  &::-webkit-scrollbar {
+    height: 0;
+    width: 0;
+  }
 }
 .addTaskTop {
   padding: 24px;
@@ -53,7 +62,7 @@
 }
 .depWrapper {
   // width: 100%;
-  margin : 0 -24px 24px;
+  margin: 0 -24px 24px;
   overflow-x: auto;
   scrollbar-width: none;
   &::-webkit-scrollbar {
@@ -108,4 +117,13 @@
   }
 }
 
-
+.close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: transparent;
+}
