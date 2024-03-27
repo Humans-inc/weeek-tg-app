@@ -6,6 +6,9 @@ export interface AddTaskProps {
   projectId: string;
   handleVisible: any;
 }
+export interface GantProps {
+  handleVisible: any;
+}
 
 export interface DataNewTask {
   category: string;
@@ -27,6 +30,6 @@ export interface CustomInputProps {
 }
 
 export interface TasksFilters {
-  departament: string;
-  state: string;
+  departament: number;
+  state: number;
 }

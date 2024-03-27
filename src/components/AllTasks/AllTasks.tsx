@@ -1,20 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 //import { FC } from 'react';
-import { ChangeEvent, useContext, useState } from 'react';
+import { ChangeEvent, Fragment, useContext, useEffect, useState } from 'react';
 import { TelegramContext } from '../../main';
 import Select from 'react-select';
 
 import styles from './AllTasks.module.scss';
 import { TasksFilters } from '../../utils/types';
 import { AddTask } from '../AddTask/AddTask';
+import { Gant } from '../Gant/Gant';
 
-const selectOptions = [
-  { value: 'other', label: 'Другое' },
-  { value: 'design', label: 'Дизайн' },
-  { value: 'dev', label: 'Разработка' },
-  { value: 'tech', label: 'Тех.часть' },
-];
 const customStyles = {
   control: (provided: any) => ({
     ...provided,
@@ -77,29 +73,63 @@ const customStyles = {
 
 const AllTasks: any = (props: any) => {
   const tg: any = useContext(TelegramContext);
-  console.log(props);
+
+  const [board] = useState([...props.data.boards][0]);
+  const [columns, setColumns] = useState(
+    [...props.data.columns].filter((item: any) => item.boardId === board.id)
+  );
+  const selectOptions = props.data.boards.map((item: any) => ({
+    value: item.id,
+    label: item.name,
+  }));
 
   const [filters, setFilters] = useState<TasksFilters>({
-    departament: 'other',
-    state: 'other',
+    departament: board.id,
+    state: columns[0].id,
   });
-  const [tasks, _] = useState([...props.tasks]);
+  const [tasks, setTasks] = useState(
+    [...props.data.tasks].filter(
+      (item: any) =>
+        item.boardId == filters.departament &&
+        item.boardColumnId == filters.state
+    )
+  );
   const [activeTask, setActiveTask] = useState({
-    ...tasks.filter((item) => item.id === 304),
+    ...tasks.filter((item) => item.id === tasks[0].id),
   });
   const [isVisible, setIsVisible] = useState(false);
   const [isVisibleNewTask, setIsVisibleNewTask] = useState(false);
+  const [isVisibleGant, setIsVisibleGant] = useState(false);
 
   document.body.style.overflow = `${
     isVisible || isVisibleNewTask ? 'hidden' : ''
   }`;
 
-  const handleVisible = () => {
+  useEffect(() => {
+    setTasks(
+      [...props.data.tasks].filter(
+        (item: any) =>
+          item.boardId == filters.departament &&
+          item.boardColumnId == filters.state
+      )
+    );
+    console.log(filters);
+  }, [filters]);
+
+  useEffect(() => {
+    console.log(tasks);
+  }, [tasks]);
+
+  const handleVisibleNewTask = () => {
     setIsVisibleNewTask(false);
+  };
+  const handleVisibleGant = () => {
+    setIsVisibleGant(false);
   };
 
   const changeState = (e: ChangeEvent<HTMLInputElement>) => {
-    setFilters({ ...filters, state: e.target.value });
+    setFilters({ ...filters, state: +e.target.value });
+    console.log(filters);
   };
 
   return (
@@ -127,86 +157,82 @@ const AllTasks: any = (props: any) => {
       <Select
         options={selectOptions}
         defaultValue={selectOptions[0]}
-        onChange={(selectedOption) =>
-          setFilters({ ...filters, departament: selectedOption!.value })
-        }
+        onChange={(selectedOption) => {
+          const column = [...props.data.columns].filter(
+            (item: any) => item.boardId === +selectedOption!.value
+          )[0];
+          setFilters({
+            state: column.id,
+            departament: +selectedOption!.value,
+          });
+          setColumns(
+            [...props.data.columns].filter(
+              (item: any) => item.boardId === +selectedOption!.value
+            )
+          );
+        }}
         styles={customStyles}
         isSearchable={false}
       />
       <p className={styles.subtitle}>Статус</p>
       <div className={styles.depWrapper}>
         <div className={styles.deps}>
-          <input
-            type="radio"
-            name="state"
-            id="other"
-            value="other"
-            onChange={(e) => changeState(e)}
-            checked={filters.state === 'other'}
-          />
-          <label htmlFor="other">Неразобранное</label>
-          <input
-            type="radio"
-            name="state"
-            id="backlog"
-            value="backlog"
-            onChange={(e) => changeState(e)}
-            checked={filters.state === 'backlog'}
-          />
-          <label htmlFor="backlog">К работе</label>
-          <input
-            type="radio"
-            name="state"
-            id="inProgress"
-            value="inProgress"
-            onChange={(e) => changeState(e)}
-            checked={filters.state === 'inProgress'}
-          />
-          <label htmlFor="inProgress">В работе</label>
-          <input
-            type="radio"
-            name="state"
-            id="done"
-            value="done"
-            onChange={(e) => changeState(e)}
-            checked={filters.state === 'done'}
-          />
-          <label htmlFor="done">Готово</label>
+          {columns.map((item: any) => (
+            <Fragment key={item.id}>
+              <input
+                type="radio"
+                name="state"
+                id={`state-${item.id}`}
+                value={item.id}
+                onChange={(e) => changeState(e)}
+                checked={filters.state == item.id}
+              />
+              <label htmlFor={`state-${item.id}`}>{item.name}</label>
+            </Fragment>
+          ))}
         </div>
       </div>
       <div className={styles.tasksContainer}>
-        {tasks.length &&
-          tasks.map((item: any, index: number) => (
-            <button
-              key={index}
-              className={styles.task}
-              onClick={() => {
-                setActiveTask({
-                  ...tasks.filter((task) => task.id === item.id),
-                });
-                setIsVisible(!isVisible);
-              }}>
-              <span className={styles.taskName}>{item.title}</span>
-              <span className={styles.taskDate}>
-                <b>Дедлайн:</b> {item.date}
-              </span>
-              <span
-                className={`${styles.taskPriority} priority-${item.priority}`}>
-                {item.priority === 0
-                  ? 'Низкий'
-                  : item.priority === 1
-                  ? 'Средний'
-                  : item.priority === 2
-                  ? 'Высокий'
-                  : item.priority === 3
-                  ? 'Заморожен'
-                  : 'Без приоритета'}
-              </span>
-            </button>
-          ))}
+        {tasks.length > 0
+          ? tasks.map((item: any, index: number) => (
+              <button
+                key={index}
+                className={styles.task}
+                onClick={() => {
+                  setActiveTask({
+                    ...tasks.filter((task) => task.id === item.id),
+                  });
+                  setIsVisible(!isVisible);
+                }}>
+                <span className={styles.taskName}>
+                  {item.title || 'Без названия'}
+                </span>
+                <span className={styles.taskDate}>
+                  <b>Дедлайн:</b> {item.date}
+                </span>
+                <span
+                  className={`${styles.taskPriority} priority-${item.priority}`}>
+                  {item.priority === 0
+                    ? 'Низкий'
+                    : item.priority === 1
+                    ? 'Средний'
+                    : item.priority === 2
+                    ? 'Высокий'
+                    : item.priority === 3
+                    ? 'Заморожен'
+                    : 'Без приоритета'}
+                </span>
+              </button>
+            ))
+          : 'Пока ничего нет'}
       </div>
       <div className={styles.bottom}>
-        <p className={styles.bottomProject}>{props.project}</p>
+        <button
+          type="button"
+          className={styles.bottomProject}
+          onClick={() => setIsVisibleGant(!isVisibleGant)}>
+          Посмотреть гант <span>{props.project}</span>
+        </button>
         <button
           className={styles.bottomAddTask}
           onClick={() => setIsVisibleNewTask(!isVisibleNewTask)}>
@@ -224,7 +250,7 @@ const AllTasks: any = (props: any) => {
               strokeLinejoin="round"
             />
           </svg>
-          Добавить
+          Добавить задачу
         </button>
       </div>
       <div className={`${styles.taskPage} ${isVisible ? 'visible' : ''}`}>
@@ -302,7 +328,12 @@ const AllTasks: any = (props: any) => {
         <AddTask
           projectName={props.project}
           projectId={props.id}
-          handleVisible={handleVisible}
+          handleVisible={handleVisibleNewTask}
+        />
+      )}
+      {isVisibleGant && (
+        <Gant
+          handleVisible={handleVisibleGant}
         />
       )}
     </div>
