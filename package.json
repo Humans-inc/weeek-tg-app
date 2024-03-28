@@ -12,6 +12,7 @@
   "dependencies": {
     "@tinymce/tinymce-react": "^4.3.2",
     "date-fns": "^3.3.1",
+    "frappe-gantt": "^0.6.1",
     "react": "^18.2.0",
     "react-datepicker": "^5.1.0",
     "react-dom": "^18.2.0",
@@ -21,6 +22,7 @@
     "react-select": "^5.8.0"
   },
   "devDependencies": {
+    "@types/frappe-gantt": "^0.6.4",
     "@types/react": "^18.2.43",
     "@types/react-datepicker": "^4.19.5",
     "@types/react-dom": "^18.2.17",

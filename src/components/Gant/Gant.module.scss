@@ -2,11 +2,11 @@
   position: fixed;
   inset: 0;
   min-height: 100svh;
-  background: #eee;
+  background: #fff;
   overflow-y: auto;
   scrollbar-width: none;
   z-index: 3;
-  padding-top: 50px;
+  padding: 0;
   &::-webkit-scrollbar {
     height: 0;
     width: 0;
@@ -15,16 +15,18 @@
 
 .close {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 1px;
+  right: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 10px;
   background: transparent;
+  z-index: 10;
 }
 .gantContainer {
   overflow-x: auto;
+  padding: 0 !important;
 }
 .gantWrapper {
   width: 1000px;
