@@ -116,10 +116,6 @@ const AllTasks: any = (props: any) => {
     console.log(filters);
   }, [filters]);
 
-  useEffect(() => {
-    console.log(tasks);
-  }, [tasks]);
-
   const handleVisibleNewTask = () => {
     setIsVisibleNewTask(false);
   };
@@ -332,9 +328,7 @@ const AllTasks: any = (props: any) => {
         />
       )}
       {isVisibleGant && (
-        <Gant
-          handleVisible={handleVisibleGant}
-        />
+        <Gant handleVisible={handleVisibleGant} tasks={[...props.data.tasks]} />
       )}
     </div>
   );

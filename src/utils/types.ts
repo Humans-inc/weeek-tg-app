@@ -8,6 +8,7 @@ export interface AddTaskProps {
 }
 export interface GantProps {
   handleVisible: any;
+  tasks: any;
 }
 
 export interface DataNewTask {
