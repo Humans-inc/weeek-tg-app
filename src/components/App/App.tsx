@@ -12,7 +12,7 @@ const App = () => {
   const [projectData, setProjectData] = useState({});
 
   const tg: any = useContext(TelegramContext);
-  console.log(tg)
+  console.log(tg);
   const userId = tg.initDataUnsafe.user?.id;
 
   const searchString = new URLSearchParams(window.location.search);
@@ -30,7 +30,7 @@ const App = () => {
   });
 
   // const userId = '168348590';
-  // const chatId = '-1002079262956';
+  // const chatId = '-1002207813739';
 
   useEffect(() => {
     fetch(`https://s1.hmns.in/bot/get-tasks?chat=${chatId}&user=${userId}`)

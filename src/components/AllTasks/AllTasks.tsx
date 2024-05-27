@@ -94,9 +94,7 @@ const AllTasks: any = (props: any) => {
         item.boardColumnId == filters.state
     )
   );
-  const [activeTask, setActiveTask] = useState({
-    ...tasks.filter((item) => item.id === tasks[0].id),
-  });
+  const [activeTask, setActiveTask] = useState<any[]>([]);
   const [isVisible, setIsVisible] = useState(false);
   const [isVisibleNewTask, setIsVisibleNewTask] = useState(false);
   const [isVisibleGant, setIsVisibleGant] = useState(false);
@@ -104,6 +102,13 @@ const AllTasks: any = (props: any) => {
   document.body.style.overflow = `${
     isVisible || isVisibleNewTask ? 'hidden' : ''
   }`;
+
+  useEffect(() => {
+    console.log(...tasks.filter((item) => item.id === tasks[0].id));
+    setActiveTask(
+      [...tasks.filter((item) => item.id === tasks[0].id)]
+    );
+  }, [tasks])
 
   useEffect(() => {
     setTasks(
@@ -195,9 +200,9 @@ const AllTasks: any = (props: any) => {
                 key={index}
                 className={styles.task}
                 onClick={() => {
-                  setActiveTask({
+                  setActiveTask([
                     ...tasks.filter((task) => task.id === item.id),
-                  });
+                  ]);
                   setIsVisible(!isVisible);
                 }}>
                 <span className={styles.taskName}>
@@ -249,77 +254,79 @@ const AllTasks: any = (props: any) => {
           Добавить задачу
         </button>
       </div>
-      <div className={`${styles.taskPage} ${isVisible ? 'visible' : ''}`}>
-        <div className={styles.activeTaskHeader}>
-          <a
-            href={`https://app.weeek.net/ws/452020/task/${activeTask[0].id}`}
-            className={styles.activeTaskLink}>
-            {activeTask[0].id}
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <g clipPath="url(#clip0_6_5514)">
+      {activeTask.length && (
+        <div className={`${styles.taskPage} ${isVisible ? 'visible' : ''}`}>
+          <div className={styles.activeTaskHeader}>
+            <a
+              href={`https://app.weeek.net/ws/452020/task/${activeTask[0].id}`}
+              className={styles.activeTaskLink}>
+              {activeTask[0].id}
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <g clipPath="url(#clip0_6_5514)">
+                  <path
+                    d="M6.35378 9.18196L5.64667 9.88907C4.67036 10.8654 3.08745 10.8654 2.11114 9.88907C1.13483 8.91276 1.13483 7.32985 2.11114 6.35354L2.81825 5.64643M9.18221 6.35354L9.88931 5.64643C10.8656 4.67012 10.8656 3.08721 9.88931 2.1109C8.913 1.13458 7.33009 1.13458 6.35378 2.1109L5.64667 2.818M4.25023 7.74997L7.75023 4.24997"
+                    stroke="white"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </g>
+                <defs>
+                  <clipPath id="clip0_6_5514">
+                    <rect width="12" height="12" fill="white" />
+                  </clipPath>
+                </defs>
+              </svg>
+            </a>
+            <button
+              className={styles.activeTaskHide}
+              onClick={() => setIsVisible(!isVisible)}>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
                 <path
-                  d="M6.35378 9.18196L5.64667 9.88907C4.67036 10.8654 3.08745 10.8654 2.11114 9.88907C1.13483 8.91276 1.13483 7.32985 2.11114 6.35354L2.81825 5.64643M9.18221 6.35354L9.88931 5.64643C10.8656 4.67012 10.8656 3.08721 9.88931 2.1109C8.913 1.13458 7.33009 1.13458 6.35378 2.1109L5.64667 2.818M4.25023 7.74997L7.75023 4.24997"
-                  stroke="white"
+                  d="M12 4L4 12M4 4L12 12"
+                  stroke="black"
                   strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-              </g>
-              <defs>
-                <clipPath id="clip0_6_5514">
-                  <rect width="12" height="12" fill="white" />
-                </clipPath>
-              </defs>
-            </svg>
-          </a>
-          <button
-            className={styles.activeTaskHide}
-            onClick={() => setIsVisible(!isVisible)}>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M12 4L4 12M4 4L12 12"
-                stroke="black"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            Закрыть
-          </button>
-        </div>
-        <p className={styles.activeTaskTitle}>{activeTask[0].title}</p>
-        <div className={styles.activeTaskData}>
-          <div className={styles.taskDate}>
-            Дедлайн: {activeTask[0].date || 'нет'}
+              </svg>
+              Закрыть
+            </button>
+          </div>
+          <p className={styles.activeTaskTitle}>{activeTask[0].title}</p>
+          <div className={styles.activeTaskData}>
+            <div className={styles.taskDate}>
+              Дедлайн: {activeTask[0].date || 'нет'}
+            </div>
+            <div
+              className={`${styles.taskPriority} priority-${activeTask[0].priority}`}>
+              {activeTask[0].priority === 0
+                ? 'Низкий'
+                : activeTask[0].priority === 1
+                ? 'Средний'
+                : activeTask[0].priority === 2
+                ? 'Высокий'
+                : activeTask[0].priority === 3
+                ? 'Заморожен'
+                : 'Без приоритета'}
+            </div>
           </div>
           <div
-            className={`${styles.taskPriority} priority-${activeTask[0].priority}`}>
-            {activeTask[0].priority === 0
-              ? 'Низкий'
-              : activeTask[0].priority === 1
-              ? 'Средний'
-              : activeTask[0].priority === 2
-              ? 'Высокий'
-              : activeTask[0].priority === 3
-              ? 'Заморожен'
-              : 'Без приоритета'}
-          </div>
+            className={styles.activeTaskDescription}
+            dangerouslySetInnerHTML={{ __html: activeTask[0].description }}
+          />
         </div>
-        <div
-          className={styles.activeTaskDescription}
-          dangerouslySetInnerHTML={{ __html: activeTask[0].description }}
-        />
-      </div>
+      )}
       {isVisibleNewTask && (
         <AddTask
           projectName={props.project}
