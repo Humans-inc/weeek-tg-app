@@ -1,8 +1,8 @@
-name: Deploy Weeek Tg App
+name: Deploy Weeek Tg SandApp
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ test ]
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -32,6 +32,4 @@ jobs:
       run: |
         eval "$(ssh-agent -s)"
         ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
-        scp -rv ./dist/* levpavloff@185.185.70.149:/var/www/projects/webapp
-
-
+        scp -rv ./dist/* levpavloff@185.185.70.149:/var/www/projects/sandapp
