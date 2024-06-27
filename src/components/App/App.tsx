@@ -33,7 +33,7 @@ const App = () => {
   // const chatId = '-1002207813739';
 
   useEffect(() => {
-    fetch(`https://s1.hmns.in/bot/get-tasks?chat=${chatId}&user=${userId}`)
+    fetch(`https://s1.hmns.in/sandbot/get-tasks?chat=${chatId}&user=${userId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.access) {

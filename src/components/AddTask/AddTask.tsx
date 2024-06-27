@@ -173,7 +173,7 @@ const AddTask: FC<AddTaskProps> = ({
       console.log(pair[0], pair[1]);
     }
 
-    fetch(`https://s1.hmns.in/bot/create-task?project=${projectId}`, {
+    fetch(`https://s1.hmns.in/sandbot/create-task?project=${projectId}`, {
       method: 'POST',
       body: JSON.stringify(realData),
       headers: {
