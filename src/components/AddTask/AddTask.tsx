@@ -173,7 +173,7 @@ const AddTask: FC<AddTaskProps> = ({
       console.log(pair[0], pair[1]);
     }
 
-    fetch(`https://s1.hmns.in/sandbot/create-task?project=${projectId}`, {
+    fetch(`https://server.hmn.su/sandbot/create-task?project=${projectId}`, {
       method: 'POST',
       body: JSON.stringify(realData),
       headers: {
@@ -198,7 +198,10 @@ const AddTask: FC<AddTaskProps> = ({
       if (files.length) {
         const formData = new FormData();
         files.forEach((image) => formData.append('images', image));
-        fetch('https://s1.hmns.in/upload', { method: 'POST', body: formData })
+        fetch('https://server.hmn.su/upload', {
+          method: 'POST',
+          body: formData,
+        })
           .then((res) => {
             if (res.ok) {
               return res.json();

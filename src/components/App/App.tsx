@@ -23,17 +23,21 @@ const App = () => {
   const paramsObj = JSON.parse(atob(params[0]));
   const chatId = paramsObj.chat_id;
 
+  // const userId = '168348590';
+  // const chatId = '-1002079262956';
+
   console.log({
     userId,
     chatId,
+    params
     chatIdTG: tg.initDataUnsafe.chat?.id,
   });
 
-  // const userId = '168348590';
-  // const chatId = '-1002207813739';
 
   useEffect(() => {
-    fetch(`https://s1.hmns.in/sandbot/get-tasks?chat=${chatId}&user=${userId}`)
+    fetch(
+      `https://server.hmn.su/sandbot/get-tasks?chat=${chatId}&user=${userId}`
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data.access) {
