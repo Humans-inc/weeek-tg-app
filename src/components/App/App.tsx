@@ -29,7 +29,7 @@ const App = () => {
   console.log({
     userId,
     chatId,
-    params
+    params,
     chatIdTG: tg.initDataUnsafe.chat?.id,
   });
 
